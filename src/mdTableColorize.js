@@ -107,20 +107,19 @@ function plugin(CodeMirror) {
 	}
 
 	function colorizeRow(cm, lidx, nColumns, lineState = null, rclass = null) {
-		if (lineState == null){
-			lineState = calcState(cm.getLine(lidx));
-		}
+		var doc = cm.getDoc();
 		var ret = [];
-		var rowClass = (rclass==null) ? ("cm-tabcolor-row") : (rclass)
+		var lineState = lineState == null ? calcState(doc.getLine(lidx)) : lineState;
+		var rowClass = rclass==null ? "cm-tabcolor-row" : rclass;
 
-		ret.push(cm.markText( CodeMirror.Pos(lidx,0), 
+		ret.push(doc.markText( CodeMirror.Pos(lidx,0), 
 							  CodeMirror.Pos(lidx,lineState.src.length), 
 							  {className: rowClass} ))
 
-		let col = 1;
-		let pos = lineState.bMark + lineState.tShift;
+		var col = 1;
+		var pos = lineState.bMark + lineState.tShift;
 
-		let firstCh = lineState.src.charCodeAt(pos);
+		var firstCh = lineState.src.charCodeAt(pos);
 
 		// Handle first column seperately
 		var colStart = 0, colEnd = 0;
@@ -133,7 +132,7 @@ function plugin(CodeMirror) {
 			colStart = 0;
 			colEnd = lineState.src.indexOf("|");
 		}
-		ret.push(cm.markText( CodeMirror.Pos(lidx,colStart), 
+		ret.push(doc.markText( CodeMirror.Pos(lidx,colStart), 
 					  CodeMirror.Pos(lidx,colEnd+1), 
 					  {className: `cm-tabcolor-col${col}`} ));
 
@@ -144,7 +143,7 @@ function plugin(CodeMirror) {
 			pipeIdx = lineState.src.substring(colStart).indexOf("|");
 			colEnd  = (pipeIdx<0) ? colEnd = lineState.eMark : colStart + pipeIdx;
 	
-			ret.push(cm.markText( CodeMirror.Pos(lidx,colStart), 
+			ret.push(doc.markText( CodeMirror.Pos(lidx,colStart), 
 						  CodeMirror.Pos(lidx,colEnd+1), 
 						  {className: `cm-tabcolor-col${col}`} ));
 			if (col >= nColumns ) { break;}
@@ -157,19 +156,25 @@ function plugin(CodeMirror) {
 	function colorizeTable(cm) {
 		cm.operation(function() {
 			clear(cm);
+
 			var range = cm.getViewport();
-			var firstLine = cm.firstLine();
-			var lastLine  = cm.lastLine();
+
+			var doc       = cm.getDoc();
+			var firstLine = doc.firstLine();
+			var lastLine  = doc.lastLine();
 
 			var startIdx = range.from;
 			var endIdx   = Math.min(range.to,lastLine);
 
 			while (true) {
-				line = cm.getLine(startIdx);
+				var line = doc.getLine(startIdx);
 				if (line==null) { return; }
 				if (line.indexOf("|") >= 0) {
 					startIdx = startIdx - 1;
-					if (startIdx <= firstLine) {break;}
+					if (startIdx <= firstLine) {
+						startIdx = firstLine;
+						break;
+					}
 				} else {
 					break;
 				}
@@ -177,7 +182,9 @@ function plugin(CodeMirror) {
 
 			var nColumns = 0;  
 			var currLine = null;
-			var nextLine = calcState(cm.getLine(startIdx));
+			var line = doc.getLine(startIdx);
+			if (line==null) { return; };
+			var nextLine = calcState(line);
 
 			for (var lidx = startIdx; lidx <= endIdx; lidx++) {
 				// Not enough line to form table
@@ -185,7 +192,7 @@ function plugin(CodeMirror) {
 
 				currLine = nextLine;
 				if (lidx<endIdx) {
-					nextLine = calcState(cm.getLine(lidx+1));
+					nextLine = calcState(doc.getLine(lidx+1));
 				} else {
 					nextLine = null;
 				}
@@ -193,7 +200,7 @@ function plugin(CodeMirror) {
 				if (nColumns < 1) {
 					if (nextLine.sCount >= 4) { continue; }
 
-					let pos = nextLine.bMark + nextLine.tShift;
+					var pos = nextLine.bMark + nextLine.tShift;
 					if (pos >= nextLine.eMark) { continue; }
 
 					firstCh = nextLine.src.charCodeAt(pos++);
