@@ -1,0 +1,30 @@
+.cm-tabcolor-row {
+
+}
+.cm-tabcolor-header {
+    font-weight: bolder;
+}
+.cm-tabcolor-col1, .cm-tabcolor-col7 {
+    background-color: #0e6efd !important;
+    color: white !important;
+}
+.cm-tabcolor-col2, .cm-tabcolor-col8 {
+    background-color: #ffc108 !important;
+    color: #212529 !important;
+}
+.cm-tabcolor-col3, .cm-tabcolor-col9 {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+.cm-tabcolor-col4, .cm-tabcolor-col10 {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+.cm-tabcolor-col5, .cm-tabcolor-col11 {
+    background-color: #198754 !important;
+    color: white !important;
+}
+.cm-tabcolor-col6, .cm-tabcolor-col12 {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+}

@@ -4,39 +4,32 @@
 .cm-tabcolor-header {
 	font-weight: bolder;
 }
-.cm-tabcolor-col1 {
+.cm-tabcolor-col1, .cm-tabcolor-col7 {
 	background-color: transparent !important;
 	color: #0e6efd !important;
 }
-.cm-tabcolor-col2 {
+.cm-tabcolor-col2, .cm-tabcolor-col8 {
 	background-color: transparent !important;
 	color: #ffc108 !important; 
 }
-.cm-tabcolor-col3 {
+.cm-tabcolor-col3, .cm-tabcolor-col9 {
 	background-color: transparent !important;
 	color: #dc3545 !important;
 }
-.cm-tabcolor-col4 {
+.cm-tabcolor-col4, .cm-tabcolor-col10 {
 	background-color: transparent !important;
 	color: #0dcaf0 !important;
 }
-.cm-tabcolor-col5 {
+.cm-tabcolor-col5, .cm-tabcolor-col11 {
 	background-color: transparent !important;
 	color: #198754 !important;
 }
-.cm-tabcolor-col6 {
+.cm-tabcolor-col6, .cm-tabcolor-col12 {
 	background-color: transparent !important;
 	color: #212529 !important;
 }
-.cm-tabcolor-col7 {
-	background-color: transparent !important;
-	color: #0e6efd !important;
-}
-.cm-tabcolor-col8 {
-	background-color: transparent !important;
-	color: #ffc108 !important;
-}
-.cm-tabcolor-col9 {
-	background-color: transparent !important;
-	color: #dc3545 !important;
+
+.cm-tabcolor-pipe {
+	font-weight: bolder;
+	color:  black !important;
 }
