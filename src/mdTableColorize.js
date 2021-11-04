@@ -117,14 +117,14 @@ function plugin(CodeMirror) {
 							  {className: rowClass} ))
 
 		var col = 1;
-		var pos = lineState.bMark + lineState.tShift;
+		var firstChPos = lineState.bMark + lineState.tShift;
 
-		var firstCh = lineState.src.charCodeAt(pos);
+		var firstCh = lineState.src.charCodeAt(firstChPos);
 
 		// Handle first column seperately
 		var colStart = 0, colEnd = 0;
 		if (firstCh === 0x7C/* | */ ) {
-			colStart = pos;
+			colStart = firstChPos;
 
 			pipeIdx = lineState.src.substring(colStart+1).indexOf("|");
 			colEnd  = (pipeIdx<0) ? lineState.eMark : colStart + pipeIdx + 1 ;
@@ -141,13 +141,31 @@ function plugin(CodeMirror) {
 			col++;
 			colStart = colEnd + 1;
 			pipeIdx = lineState.src.substring(colStart).indexOf("|");
-			colEnd  = (pipeIdx<0) ? colEnd = lineState.eMark : colStart + pipeIdx;
+			colEnd  = (pipeIdx<0) ? colEnd = lineState.eMark -1 : colStart + pipeIdx;
 	
 			ret.push(doc.markText( CodeMirror.Pos(lidx,colStart), 
 						  CodeMirror.Pos(lidx,colEnd+1), 
 						  {className: `cm-tabcolor-col${col}`} ));
 			if (col >= nColumns ) { break;}
 		}
+
+		// Mark all pipes
+		for (var i = firstChPos; i < lineState.eMark; i++) {
+			const c = lineState.src.charCodeAt(i);
+			if (c === 0x7C/* | */ ) {
+				ret.push(doc.markText( CodeMirror.Pos(lidx,i), 
+								CodeMirror.Pos(lidx,i+1), 
+								{className: `cm-tabcolor-pipe`} ));
+			}
+		}
+
+		// Mark first and last chars
+		ret.push(doc.markText( CodeMirror.Pos(lidx,firstChPos), 
+					  CodeMirror.Pos(lidx,firstChPos+1), 
+					  {className: "cm-tabcolor-firstch"} ))
+		ret.push(doc.markText( CodeMirror.Pos(lidx,colEnd), 
+					  CodeMirror.Pos(lidx,colEnd+1), 
+					  {className: "cm-tabcolor-lastch"} ))
 
 		return ret;
 	}
