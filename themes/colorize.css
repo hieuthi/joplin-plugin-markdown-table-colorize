@@ -4,6 +4,9 @@
 .cm-tabcolor-header {
     font-weight: bolder;
 }
+.cm-tabcolor-header.cm-tabcolor-pipe {
+    font-weight: normal !important;
+}
 .cm-tabcolor-col1, .cm-tabcolor-col7 {
     background-color: #F07178 !important;
     color: white !important;
