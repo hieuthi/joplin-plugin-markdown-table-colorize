@@ -1,22 +1,27 @@
 .cm-tabcolor-row {
-	color: #212529;
+	color: var(--joplin-color);
 }
 .cm-tabcolor-header {
 	font-weight: bolder;
-	color: #212529;
+	color: var(--joplin-color);
 }
 .cm-tabcolor-col1, .cm-tabcolor-col6 {
 	background-color: #FFCDD2;
+	color: #212529;
 }
 .cm-tabcolor-col2, .cm-tabcolor-col7 {
 	background-color: #FFE0B2;
+	color: #212529;
 }
 .cm-tabcolor-col3, .cm-tabcolor-col8 {
 	background-color: #BBDEFB;
+	color: #212529;
 }
 .cm-tabcolor-col4, .cm-tabcolor-col9 {
 	background-color: #C8E6C9;
+	color: #212529;
 }
 .cm-tabcolor-col5, .cm-tabcolor-col10 {
 	background-color: #C5CAE9;
+	color: #212529;
 }
