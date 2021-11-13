@@ -1,8 +1,9 @@
 .cm-tabcolor-row {
-
+	color: var(--joplin-color) !important;
 }
 .cm-tabcolor-header {
 	font-weight: bolder;
+	color: var(--joplin-color) !important;
 }
 .cm-tabcolor-col1, .cm-tabcolor-col7 {
 	background-color: transparent !important;

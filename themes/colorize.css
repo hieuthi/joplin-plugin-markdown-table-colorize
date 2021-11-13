@@ -1,8 +1,10 @@
 .cm-tabcolor-row {
-
+    color: var(--joplin-color) !important;
 }
 .cm-tabcolor-header {
     font-weight: bolder;
+    color: var(--joplin-color) !important;
+
 }
 .cm-tabcolor-header.cm-tabcolor-pipe {
     font-weight: normal !important;
