@@ -33,8 +33,9 @@
 }
 .cm-tabcolor-firstch::before {
     content: "⇢";
-    color: #F07178 !important;
-    background-color: white !important;
+    color: var(--joplin-color) !important;
+    background-color: var(--joplin-background-color) !important;
+    border-radius: 0% 50% 50% 0%;
 }
 
 .cm-tabcolor-lastch {

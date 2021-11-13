@@ -135,6 +135,7 @@ function plugin(CodeMirror) {
 		ret.push(doc.markText( CodeMirror.Pos(lidx,colStart), 
 					  CodeMirror.Pos(lidx,colEnd+1), 
 					  {className: `cm-tabcolor-col${col}`} ));
+		firstChPos = colStart // So we can mark first character later
 
 		// Dealing with other columns
 		while (colEnd < lineState.eMark) {

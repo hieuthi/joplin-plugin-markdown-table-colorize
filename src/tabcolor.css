@@ -1,8 +1,9 @@
 .cm-tabcolor-row {
-
+	color: #212529;
 }
 .cm-tabcolor-header {
 	font-weight: bolder;
+	color: #212529;
 }
 .cm-tabcolor-col1, .cm-tabcolor-col6 {
 	background-color: #FFCDD2;
