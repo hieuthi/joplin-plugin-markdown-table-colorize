@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.1.4] - 2022-04-15
+### Changed
+- Change default color scheme
+- Change listening event from "cursorActivity" to "changes" to reduce overload
+
 ## [v1.1.3] - 2021-11-13
 ### Changed
 - Fix default theme
@@ -16,6 +21,7 @@
 ## [v1.0.1] - 2021-10-23
 Inital version and fully working
 
+[v1.1.4]: https://github.com/hieuthi/joplin-plugin-markdown-table-colorize/compare/v1.1.3...v1.1.4
 [v1.1.3]: https://github.com/hieuthi/joplin-plugin-markdown-table-colorize/compare/v1.1.0...v1.1.3
 [v1.1.0]: https://github.com/hieuthi/joplin-plugin-markdown-table-colorize/compare/v1.0.1...v1.1.0
 [v1.0.1]: https://github.com/hieuthi/joplin-plugin-markdown-table-colorize/releases/tag/v1.0.1

@@ -2,7 +2,7 @@
 
 This plugin add colors to joplin markdown table syntax so you can quickly identify what column the content belongs to. 
 
-![Preview v1.1.0](https://raw.githubusercontent.com/hieuthi/joplin-plugin-markdown-table-colorize/main/docs/preview-v1.1.0.png)
+![Preview v1.1.0](https://raw.githubusercontent.com/hieuthi/joplin-plugin-markdown-table-colorize/main/docs/preview-v1.1.4.png)
 
 You can change the colors by adding your own CSS to joplin `userchrome.css` file.
 Check [src/tabcolor.css](https://raw.githubusercontent.com/hieuthi/joplin-plugin-markdown-table-colorize/main/src/tabcolor.css) for the basic CSS classes used by this plugin. The default color scheme is kept simple to make it easier for customization.
