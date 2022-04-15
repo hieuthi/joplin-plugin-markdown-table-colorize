@@ -5,23 +5,36 @@
 	font-weight: bolder;
 	color: var(--joplin-color);
 }
-.cm-tabcolor-col1, .cm-tabcolor-col6 {
-	background-color: #FFCDD2;
+.cm-tabcolor-col1, .cm-tabcolor-col9 {
+	background-color: #FFECED;
 	color: #212529;
 }
-.cm-tabcolor-col2, .cm-tabcolor-col7 {
-	background-color: #FFE0B2;
+.cm-tabcolor-col2, .cm-tabcolor-col10 {
+	background-color: #FBD4D2;
 	color: #212529;
 }
-.cm-tabcolor-col3, .cm-tabcolor-col8 {
-	background-color: #BBDEFB;
+.cm-tabcolor-col3, .cm-tabcolor-col11 {
+	background-color: #F1B4B4;
 	color: #212529;
 }
-.cm-tabcolor-col4, .cm-tabcolor-col9 {
-	background-color: #C8E6C9;
+.cm-tabcolor-col4, .cm-tabcolor-col12 {
+	background-color: #CCA3A3;
 	color: #212529;
 }
-.cm-tabcolor-col5, .cm-tabcolor-col10 {
-	background-color: #C5CAE9;
+
+.cm-tabcolor-col5, .cm-tabcolor-col13 {
+	background-color: #F1EAB6;
+	color: #212529;
+}
+.cm-tabcolor-col6, .cm-tabcolor-col14 {
+	background-color: #E4DBA0;
+	color: #212529;
+}
+.cm-tabcolor-col7, .cm-tabcolor-col15 {
+	background-color: #CAC18A;
+	color: #212529;
+}
+.cm-tabcolor-col8, .cm-tabcolor-col16 {
+	background-color: #ABA47B;
 	color: #212529;
 }

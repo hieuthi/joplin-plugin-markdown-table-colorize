@@ -1,47 +1,45 @@
 // Basing on Markdown-it code for table parsion
 function isSpace(code) {
-  switch (code) {
-    case 0x09:
-    case 0x20:
-      return true;
-  }
-  return false;
+	switch (code) {
+		case 0x09:
+		case 0x20:
+			return true;
+	}
+	return false;
 }
 
 function escapedSplit(str) {
-  var result = [],
-      pos = 0,
-      max = str.length,
-      ch,
-      isEscaped = false,
-      lastPos = 0,
-      current = '';
+	var result = [],
+			pos = 0,
+			max = str.length,
+			ch,
+			isEscaped = false,
+			lastPos = 0,
+			current = '';
 
-  ch  = str.charCodeAt(pos);
+	ch  = str.charCodeAt(pos);
 
-  while (pos < max) {
-    if (ch === 0x7c/* | */) {
-      if (!isEscaped) {
-        // pipe separating cells, '|'
-        result.push(current + str.substring(lastPos, pos));
-        current = '';
-        lastPos = pos + 1;
-      } else {
-        // escaped pipe, '\|'
-        current += str.substring(lastPos, pos - 1);
-        lastPos = pos;
-      }
-    }
+	while (pos < max) {
+		if (ch === 0x7c/* | */) {
+			if (!isEscaped) {
+				// pipe separating cells, '|'
+				result.push(current + str.substring(lastPos, pos));
+				current = '';
+				lastPos = pos + 1;
+			} else {
+				// escaped pipe, '\|'
+				current += str.substring(lastPos, pos - 1);
+				lastPos = pos;
+			}
+		}
 
-    isEscaped = (ch === 0x5c/* \ */);
-    pos++;
+		isEscaped = (ch === 0x5c/* \ */);
+		pos++;
+		ch = str.charCodeAt(pos);
+	}
 
-    ch = str.charCodeAt(pos);
-  }
-
-  result.push(current + str.substring(lastPos));
-
-  return result;
+	result.push(current + str.substring(lastPos));
+	return result;
 }
 
 function calcState(line) {
@@ -85,56 +83,51 @@ function calcState(line) {
 
 
 function plugin(CodeMirror) {
-
 	CodeMirror.defineOption("mdTableColorize", false, async function(cm, val, old) {
-	    if (old && old != CodeMirror.Init) {
-	    	cm.off("cursorActivity", colorizeTable);
-	     	cm.off("viewportChange", colorizeTable);
-	     	clear(cm);
-	    }
-	    if (val) {
-	    	//cm.state.matchBothTags = typeof val == "object" && val.bothTags;
-	    	cm.on("cursorActivity", colorizeTable);
-	    	cm.on("viewportChange", colorizeTable);
-	    	colorizeTable(cm);
-	    }
+			if (old && old != CodeMirror.Init) {
+				cm.off("changes", colorizeTable);
+				cm.off("viewportChange", colorizeTable);
+				clear(cm);
+			}
+			if (val) {
+				cm.on("changes", colorizeTable);
+				cm.on("viewportChange", colorizeTable);
+				colorizeTable(cm);
+			}
 	});
 
 	function clear(cm) {
-		if (cm.state.tagCTables) {cm.state.tagCTables.forEach(marker => marker.clear())};
-		cm.state.tagCTables = [];
-
+		if (cm.state.coloredTableMarkers) {cm.state.coloredTableMarkers.forEach(marker => marker.clear())};
+		cm.state.coloredTableMarkers = [];
 	}
 
-	function colorizeRow(cm, lidx, nColumns, lineState = null, rclass = null) {
+	function colorizeRow(cm, idx, nColumns, lineState = null, rclass = null) {
 		var doc = cm.getDoc();
 		var ret = [];
-		var lineState = lineState == null ? calcState(doc.getLine(lidx)) : lineState;
+		var lineState = lineState == null ? calcState(doc.getLine(idx)) : lineState;
 		var rowClass = rclass==null ? "cm-tabcolor-row" : rclass;
 
-		ret.push(doc.markText( CodeMirror.Pos(lidx,0), 
-							  CodeMirror.Pos(lidx,lineState.src.length), 
-							  {className: rowClass} ))
+		ret.push(doc.markText(CodeMirror.Pos(idx,0), 
+													CodeMirror.Pos(idx,lineState.src.length), 
+													{className: rowClass}))
 
 		var col = 1;
 		var firstChPos = lineState.bMark + lineState.tShift;
-
 		var firstCh = lineState.src.charCodeAt(firstChPos);
 
 		// Handle first column seperately
 		var colStart = 0, colEnd = 0;
 		if (firstCh === 0x7C/* | */ ) {
 			colStart = firstChPos;
-
-			pipeIdx = lineState.src.substring(colStart+1).indexOf("|");
-			colEnd  = (pipeIdx<0) ? lineState.eMark : colStart + pipeIdx + 1 ;
+			pipeIdx  = lineState.src.substring(colStart+1).indexOf("|");
+			colEnd   = (pipeIdx<0) ? lineState.eMark : colStart + pipeIdx + 1 ;
 		} else {
 			colStart = 0;
 			colEnd = lineState.src.indexOf("|");
 		}
-		ret.push(doc.markText( CodeMirror.Pos(lidx,colStart), 
-					  CodeMirror.Pos(lidx,colEnd+1), 
-					  {className: `cm-tabcolor-col${col}`} ));
+		ret.push( doc.markText( CodeMirror.Pos(idx,colStart), 
+							CodeMirror.Pos(idx,colEnd+1), 
+							{className: `cm-tabcolor-col${col}`} ) );
 		firstChPos = colStart // So we can mark first character later
 
 		// Dealing with other columns
@@ -143,10 +136,9 @@ function plugin(CodeMirror) {
 			colStart = colEnd + 1;
 			pipeIdx = lineState.src.substring(colStart).indexOf("|");
 			colEnd  = (pipeIdx<0) ? colEnd = lineState.eMark -1 : colStart + pipeIdx;
-	
-			ret.push(doc.markText( CodeMirror.Pos(lidx,colStart), 
-						  CodeMirror.Pos(lidx,colEnd+1), 
-						  {className: `cm-tabcolor-col${col}`} ));
+			ret.push(doc.markText( CodeMirror.Pos(idx,colStart), 
+							CodeMirror.Pos(idx,colEnd+1), 
+							{className: `cm-tabcolor-col${col}`} ));
 			if (col >= nColumns ) { break;}
 		}
 
@@ -154,20 +146,19 @@ function plugin(CodeMirror) {
 		for (var i = firstChPos; i < lineState.eMark; i++) {
 			const c = lineState.src.charCodeAt(i);
 			if (c === 0x7C/* | */ ) {
-				ret.push(doc.markText( CodeMirror.Pos(lidx,i), 
-								CodeMirror.Pos(lidx,i+1), 
+				ret.push(doc.markText( CodeMirror.Pos(idx,i), 
+								CodeMirror.Pos(idx,i+1), 
 								{className: `cm-tabcolor-pipe`} ));
 			}
 		}
 
 		// Mark first and last chars
-		ret.push(doc.markText( CodeMirror.Pos(lidx,firstChPos), 
-					  CodeMirror.Pos(lidx,firstChPos+1), 
-					  {className: "cm-tabcolor-firstch"} ))
-		ret.push(doc.markText( CodeMirror.Pos(lidx,colEnd), 
-					  CodeMirror.Pos(lidx,colEnd+1), 
-					  {className: "cm-tabcolor-lastch"} ))
-
+		ret.push(doc.markText(CodeMirror.Pos(idx,firstChPos), 
+													CodeMirror.Pos(idx,firstChPos+1), 
+													{className: "cm-tabcolor-firstch"}))
+		ret.push(doc.markText(CodeMirror.Pos(idx,colEnd), 
+													CodeMirror.Pos(idx,colEnd+1), 
+													{className: "cm-tabcolor-lastch"}))
 		return ret;
 	}
 
@@ -177,21 +168,21 @@ function plugin(CodeMirror) {
 			clear(cm);
 
 			var range = cm.getViewport();
+			var doc   = cm.getDoc();
 
-			var doc       = cm.getDoc();
-			var firstLine = doc.firstLine();
-			var lastLine  = doc.lastLine();
+			var firstLineIdx = doc.firstLine();
+			var lastLineIdx  = doc.lastLine();
 
 			var startIdx = range.from;
-			var endIdx   = Math.min(range.to,lastLine);
+			var endIdx   = Math.min(range.to,lastLineIdx);
 
 			while (true) {
 				var line = doc.getLine(startIdx);
 				if (line==null) { return; }
 				if (line.indexOf("|") >= 0) {
 					startIdx = startIdx - 1;
-					if (startIdx <= firstLine) {
-						startIdx = firstLine;
+					if (startIdx <= firstLineIdx) {
+						startIdx = firstLineIdx;
 						break;
 					}
 				} else {
@@ -205,18 +196,13 @@ function plugin(CodeMirror) {
 			if (line==null) { return; };
 			var nextLine = calcState(line);
 
-			for (var lidx = startIdx; lidx <= endIdx; lidx++) {
-				// Not enough line to form table
-				if (nColumns<1 && lidx + 1 > endIdx) { return; }
-
+			for (var idx = startIdx; idx <= endIdx; idx++) {
 				currLine = nextLine;
-				if (lidx<endIdx) {
-					nextLine = calcState(doc.getLine(lidx+1));
-				} else {
-					nextLine = null;
-				}
+				nextLine = idx < endIdx ? calcState(doc.getLine(idx+1)) : null
 
 				if (nColumns < 1) {
+					// Last line, not enough line to form table
+					if (nextLine === null) {continue;}
 					if (nextLine.sCount >= 4) { continue; }
 
 					var pos = nextLine.bMark + nextLine.tShift;
@@ -228,66 +214,66 @@ function plugin(CodeMirror) {
 
 					secondCh = nextLine.src.charCodeAt(pos++);
 					if (secondCh !== 0x7C/* | */ && secondCh !== 0x2D/* - */ && secondCh !== 0x3A/* : */ && !isSpace(secondCh)) {
-    					continue;
- 					}
+							continue;
+					}
 
- 					if (firstCh === 0x2D/* - */ && isSpace(secondCh)) { continue; }
- 					cFlag = false
- 					while (pos < nextLine.eMark) {
- 						ch = nextLine.src.charCodeAt(pos);
- 						if (ch !== 0x7C/* | */ && ch !== 0x2D/* - */ && ch !== 0x3A/* : */ && !isSpace(ch)) {
- 							cFlag = true;
- 							break;
- 						}
- 						pos++;
- 					}
- 					if (cFlag) {continue;}
+					if (firstCh === 0x2D/* - */ && isSpace(secondCh)) { continue; }
+					cFlag = false
+					while (pos < nextLine.eMark) {
+						ch = nextLine.src.charCodeAt(pos);
+						if (ch !== 0x7C/* | */ && ch !== 0x2D/* - */ && ch !== 0x3A/* : */ && !isSpace(ch)) {
+							cFlag = true;
+							break;
+						}
+						pos++;
+					}
+					if (cFlag) {continue;}
 
- 					lineText = nextLine.src.substr(nextLine.bMark + nextLine.tShift, nextLine.eMark)
- 					columns = lineText.split('|');
- 					
- 					for (i = 0; i < columns.length; i++) {
- 						t = columns[i].trim();
- 						if (!t) {
- 							if (i === 0 || i === columns.length - 1) {
- 								continue;
- 							} else {
- 								nColumns = 0;
- 								break;
- 							}
- 						}
- 						if (!/^:?-+:?$/.test(t)) { 
+					lineText = nextLine.src.substr(nextLine.bMark + nextLine.tShift, nextLine.eMark)
+					columns = lineText.split('|');
+					
+					for (i = 0; i < columns.length; i++) {
+						t = columns[i].trim();
+						if (!t) {
+							if (i === 0 || i === columns.length - 1) {
+								continue;
+							} else {
+								nColumns = 0;
+								break;
+							}
+						}
+						if (!/^:?-+:?$/.test(t)) { 
 							nColumns = 0;
 							break;
- 						}
- 						nColumns++;
- 					}
+						}
+						nColumns++;
+					}
 
- 					lineText = currLine.src.substr(currLine.bMark + currLine.tShift, currLine.eMark).trim();
- 					if (lineText.indexOf('|') === -1 || currLine.sCount >= 4) { 
- 						nColumns = 0;
- 						continue;
- 					}
+					lineText = currLine.src.substr(currLine.bMark + currLine.tShift, currLine.eMark).trim();
+					if (lineText.indexOf('|') === -1 || currLine.sCount >= 4) { 
+						nColumns = 0;
+						continue;
+					}
 
- 					columns = escapedSplit(lineText);
+					columns = escapedSplit(lineText);
 					if (columns.length && columns[0] === '') columns.shift();
 					if (columns.length && columns[columns.length - 1] === '') columns.pop();
 					if (columns.length === 0 || columns.length !== nColumns){
 						nColumns = 0;
- 						continue;
+						continue;
 					}
- 					if (nColumns>0 && lidx >= range.from){
- 						cm.state.tagCTables=cm.state.tagCTables.concat(colorizeRow(cm, lidx, nColumns, currLine, "cm-tabcolor-header"));
- 					}
+					if (nColumns>0 && idx >= range.from){
+						cm.state.coloredTableMarkers=cm.state.coloredTableMarkers.concat(colorizeRow(cm, idx, nColumns, currLine, "cm-tabcolor-header"));
+					}
 				} else {
- 					lineText = currLine.src.substr(currLine.bMark + currLine.tShift, currLine.eMark);
- 					if (lineText.indexOf('|') === -1 || currLine.sCount >= 4) { 
- 						nColumns = 0;
- 						continue;
- 					}
- 					if (nColumns>0 && lidx >= range.from){
- 						cm.state.tagCTables=cm.state.tagCTables.concat(colorizeRow(cm, lidx, nColumns, currLine));
- 					}
+					lineText = currLine.src.substr(currLine.bMark + currLine.tShift, currLine.eMark);
+					if (lineText.indexOf('|') === -1 || currLine.sCount >= 4) { 
+						nColumns = 0;
+						continue;
+					}
+					if (nColumns>0 && idx >= range.from){
+						cm.state.coloredTableMarkers=cm.state.coloredTableMarkers.concat(colorizeRow(cm, idx, nColumns, currLine));
+					}
 				}
 			}
 		});
