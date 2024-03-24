@@ -83,6 +83,10 @@ function calcState(line) {
 
 
 function plugin(CodeMirror) {
+	if (CodeMirror.cm6) {
+		return;
+	}
+
 	CodeMirror.defineOption("mdTableColorize", false, async function(cm, val, old) {
 			if (old && old != CodeMirror.Init) {
 				cm.off("changes", colorizeTable);
