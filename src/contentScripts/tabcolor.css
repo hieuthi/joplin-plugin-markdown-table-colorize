@@ -5,6 +5,12 @@
 	font-weight: bolder;
 	color: var(--joplin-color);
 }
+/* CodeMirror 6 only */
+.cm-tabcolor-delimiter-row {
+	background-color: #CCCCCC;
+	color: #212529;
+}
+
 .cm-tabcolor-col1, .cm-tabcolor-col9 {
 	background-color: #FFECED;
 	color: #212529;

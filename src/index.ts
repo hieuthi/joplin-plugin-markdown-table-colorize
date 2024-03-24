@@ -6,8 +6,13 @@ joplin.plugins.register({
 		console.info('Markdown Table: Colorize started!');
 		await joplin.contentScripts.register(
 			ContentScriptType.CodeMirrorPlugin,
-			'mdTableColorize',
-			'./mdTableColorize.js'
+			'mdTableColorize-cm5',
+			'./contentScripts/codeMirror5.js'
+		);
+		await joplin.contentScripts.register(
+			ContentScriptType.CodeMirrorPlugin,
+			'mdTableColorize-cm6',
+			'./contentScripts/codeMirror6.js'
 		);
 	},
 });
