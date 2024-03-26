@@ -1,6 +1,6 @@
 # Markdown Table: Colorize
 
-This plugin add colors to joplin markdown table syntax so you can quickly identify what column the content belongs to. 
+This plugin add colors to joplin markdown table syntax so you can quickly identify what column the content belongs to. Plugin version 1.2.0 and later will work with the "beta editor" of Joplin 2.14.20 and above.
 
 ![Preview v1.1.0](https://raw.githubusercontent.com/hieuthi/joplin-plugin-markdown-table-colorize/main/docs/preview-v1.1.4.png)
 
